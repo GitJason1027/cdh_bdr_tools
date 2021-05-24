@@ -1,0 +1,73 @@
+﻿
+class ApiHdfsReplicationArguments(BaseApiObject):
+  _ATTRIBUTES = {
+    'sourceService'             : Attr(ApiServiceRef),
+    'sourcePath'                : None,		#源路径
+    'destinationPath'           : None,		#目标路径
+    'mapreduceServiceName'      : None,		#MeReduce服务
+    'userName'                  : None,		#运行时用的用户名
+    'numMaps'                   : None,		#最大Map时隙
+    'dryRun'                    : None,		#bool   不设置
+    'bandwidthPerMap'           : None,		#每个mapper带宽
+    'logPath'                   : None,		#日志路径
+    'schedulerPoolName'         : None,		#资源：Schedule池，默认空
+	
+	'skipChecksumChecks'        : None,		#错误处理：跳过校验和检查
+    'abortOnError'              : None,		#错误处理：错误时终止 要测测
+	
+    'preservePermissions'       : None,		#保留权限
+    'preserveBlockSize'         : None,		#保留块大小 bool
+    'preserveReplicationCount'  : None,		#保留复制计数 bool
+	'preserveXAttrs'            : None,		#保留已扩展属性
+    
+    'removeMissingFiles'        : None,		#*删除策略:永久删除
+    'skipTrash'                 : None,		#*删除策略:保留已删除的文件
+    'replicationStrategy'       : None,		#复制策略："DYNAMIC""STATIC" 要测测
+    
+    'exclusionFilters'          : None,		#要测测 []
+  }
+  
+class ApiHiveReplicationArguments(BaseApiObject):
+  _ATTRIBUTES = {
+    'sourceService' : Attr(ApiServiceRef),
+    'tableFilters'  : Attr(ApiHiveTable),
+    'exportDir'     : None,		#HDFS目标路径 要测测
+    'force'         : None,		#因错误而中止
+    'replicateData' : None,		#要测测
+    'hdfsArguments' : Attr(ApiHdfsReplicationArguments),
+    'dryRun'        : None,		#要测测
+    'replicateImpalaMetadata' : None,	#Impalametadata bool
+  }
+  
+  def create_replication_schedule(self,
+      start_time, end_time, interval_unit, interval, paused, arguments,
+      alert_on_start=False, alert_on_success=False, alert_on_fail=False,
+      alert_on_abort=False):
+    """
+    Create a new replication schedule for this service.
+    The replication argument type varies per service type. The following types
+    are recognized:
+      - HDFS: ApiHdfsReplicationArguments
+      - Hive: ApiHiveReplicationArguments
+	  
+    @type  start_time: datetime.datetime
+    @param start_time: The time at which the schedule becomes active and first executes.
+    @type  end_time: datetime.datetime
+    @param end_time: The time at which the schedule will expire.
+    @type  interval_unit: str
+    @param interval_unit: The unit of time the `interval` represents. Ex. MINUTE, HOUR,
+                          DAY. See the server documentation for a full list of values.
+    @type  interval: int
+    @param interval: The number of time units to wait until triggering the next replication.
+    @type  paused: bool
+    @param paused: Should the schedule be paused? Useful for on-demand replication.
+    @param arguments: service type-specific arguments for the replication job.
+	
+    @param alert_on_start: whether to generate alerts when the job is started. 	警告：启动时
+    @param alert_on_success: whether to generate alerts when the job succeeds.	警告：成功时
+    @param alert_on_fail: whether to generate alerts when the job fails.		警告：失败时
+    @param alert_on_abort: whether to generate alerts when the job is aborted.	警告：中止时
+    @return: The newly created schedule.
+    @since: API v3
+	
+	@description: 说明
