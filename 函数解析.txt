@@ -1,4 +1,4 @@
-﻿
+
 class ApiHdfsReplicationArguments(BaseApiObject):
   _ATTRIBUTES = {
     'sourceService'             : Attr(ApiServiceRef),
@@ -31,8 +31,8 @@ class ApiHiveReplicationArguments(BaseApiObject):
   _ATTRIBUTES = {
     'sourceService' : Attr(ApiServiceRef),
     'tableFilters'  : Attr(ApiHiveTable),
-    'exportDir'     : None,		#HDFS目标路径 要测测
-    'force'         : None,		#因错误而中止
+    'exportDir'     : None,		#Directory for metadata file
+    'force'         : None,		#强制覆盖
     'replicateData' : None,		#要测测
     'hdfsArguments' : Attr(ApiHdfsReplicationArguments),
     'dryRun'        : None,		#要测测
