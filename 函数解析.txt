@@ -7,24 +7,24 @@ class ApiHdfsReplicationArguments(BaseApiObject):
     'mapreduceServiceName'      : None,		#MeReduce服务
     'userName'                  : None,		#运行时用的用户名
     'numMaps'                   : None,		#最大Map时隙
-    'dryRun'                    : None,		#bool   不设置
+    'dryRun'                    : None,		#
     'bandwidthPerMap'           : None,		#每个mapper带宽
     'logPath'                   : None,		#日志路径
     'schedulerPoolName'         : None,		#资源：Schedule池，默认空
 	
-	'skipChecksumChecks'        : None,		#错误处理：跳过校验和检查
+    'skipChecksumChecks'        : None,		#错误处理：跳过校验和检查
     'abortOnError'              : None,		#错误处理：错误时终止 要测测
 	
     'preservePermissions'       : None,		#保留权限
     'preserveBlockSize'         : None,		#保留块大小 bool
     'preserveReplicationCount'  : None,		#保留复制计数 bool
-	'preserveXAttrs'            : None,		#保留已扩展属性
+    'preserveXAttrs'            : None,		#保留已扩展属性
     
-    'removeMissingFiles'        : None,		#*删除策略:永久删除
-    'skipTrash'                 : None,		#*删除策略:保留已删除的文件
+    'removeMissingFiles'        : None,		#*删除策略:True-删除文件到回收站，False:永久保留
+    'skipTrash'                 : None,		#*跳过回收站：默认为FALSE，为TRUE的时候与removeMissingFile=True搭配使用，代表永久删除
     'replicationStrategy'       : None,		#复制策略："DYNAMIC""STATIC" 要测测
     
-    'exclusionFilters'          : None,		#要测测 []
+    'exclusionFilters'          : None,		#
   }
   
 class ApiHiveReplicationArguments(BaseApiObject):
@@ -32,11 +32,12 @@ class ApiHiveReplicationArguments(BaseApiObject):
     'sourceService' : Attr(ApiServiceRef),
     'tableFilters'  : Attr(ApiHiveTable),
     'exportDir'     : None,		#Directory for metadata file
-    'force'         : None,		#强制覆盖
-    'replicateData' : None,		#要测测
+    'force'         : None,		#bool 强制覆盖
+    'replicateData' : None,		#bool 复制HDFS文件
     'hdfsArguments' : Attr(ApiHdfsReplicationArguments),
     'dryRun'        : None,		#要测测
     'replicateImpalaMetadata' : None,	#Impalametadata bool
+    'runInvalidateMetadata' : None	#bool 表示是否执行invalidate metadata 在impala
   }
   
   def create_replication_schedule(self,
@@ -65,7 +66,7 @@ class ApiHiveReplicationArguments(BaseApiObject):
 	
     @param alert_on_start: whether to generate alerts when the job is started. 	警告：启动时
     @param alert_on_success: whether to generate alerts when the job succeeds.	警告：成功时
-    @param alert_on_fail: whether to generate alerts when the job fails.		警告：失败时
+    @param alert_on_fail: whether to generate alerts when the job fails.	警告：失败时
     @param alert_on_abort: whether to generate alerts when the job is aborted.	警告：中止时
     @return: The newly created schedule.
     @since: API v3
