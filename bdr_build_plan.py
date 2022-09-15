@@ -32,7 +32,7 @@ for tbn in tblist:
 	plan_tblist.append(hivetb)
 
 
-TARGRT_CM_HOST = "180.137.10.63"
+TARGRT_CM_HOST = "xx" #目标CM所在的ip
 
 #目标的cm
 api_root = ApiResource(TARGRT_CM_HOST,username=cm_user,password=cm_pwd)
@@ -76,8 +76,9 @@ end = start + datetime.timedelta(days=365)
 if plan_name == '':
 	plan_name = "API-"+start.strftime('%Y%m%d%H%M')
 
-#只跑一次
+#创建计划
 schedule = hive.create_replication_schedule(start,None,None,0,True,hive_args,name=plan_name,description="API-PLAN-"+start.strftime('%Y%m%d%H%M'))
-
+#执行计划
+apicommand = hive.trigger_replication_schdule(schedule.id)
 
 print("[INFO]完成")
