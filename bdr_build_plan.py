@@ -13,11 +13,8 @@ cm_user = "xx"
 cm_pwd = "xx#"
 run_user = "xx"
 
-
-
 print("[INFO]生成计划 "+plan_name+" -- 基于"+tblist_path)
 
-#tblist = ["sdm.absa_scrtz_ast_rpay_add","sdm.abss_ast_clbk_add","sdm.SASAF_CHT_CASE_TBL_ALL"]
 with open(tblist_path,'r') as fr:
 	tblist = fr.readlines()
 plan_tblist = []
