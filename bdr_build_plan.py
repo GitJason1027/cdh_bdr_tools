@@ -52,15 +52,23 @@ TARGET_YARN_SERVICE = 'yarn'
 
 hive = api_root.get_cluster(TARGET_CLUSTER_NAME).get_service(TARGET_HIVE_SERVICE)
 
-hdfs_args = ApiHdfsReplicationArguments(None)
-#hdfs_args.sourceService = ApiServiceRef(None,peerName=PEER_NAME,clusterName=SOURCE_CLUSTER_NAME,serviceName=SOURCE_HIVE_SERVICE)
-hdfs_args.mapreduceServiceName = 'yarn'
+hdfs args = ApiHdfsReplicationArguments(None) 
+hdfs_args.mapreduceServiceName = 'yarn' 
 hdfs_args.userName = run_user
+hdfs_args.preservePermissions = True      # 保留权限 
+hdfs_args.preserveBlockSize = True        # 保留块大小
+hdfs_args.preserveReplicationCount = False# 副本计数
+hdfs_args.replicationStrategy = 'DYNAMIC' # 复制策略:动态方式
+hdfs_args.removeMissingFiles = True       # *删除策略:True删除到回收站，FFLSE 永文化
+hdfs_args.skipTrash = True                # 跳过回收站，与上行True搭配使用代表永久助除 
 
 hive_args = ApiHiveReplicationArguments(None)
 hive_args.sourceService = ApiServiceRef(None,peerName=PEER_NAME,clusterName=SOURCE_CLUSTER_NAME,serviceName=SOURCE_HIVE_SERVICE)
 hive_args.hdfsArguments = hdfs_args
 hive_args.tableFilters = plan_tblist
+hive_args.force = True                    # 强制覆盖
+hive_args.runInvelidateMetadata = True    # 刷新impala元
+hive_args.replicateData = True            # 复制HDFS文件
 
 start = datetime.datetime.now()
 end = start + datetime.timedelta(days=365)
