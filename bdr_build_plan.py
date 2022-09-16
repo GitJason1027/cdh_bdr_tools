@@ -62,7 +62,10 @@ hdfs_args.skipTrash = True                # 跳过回收站，与上行True搭�
 hive_args = ApiHiveReplicationArguments(None)
 hive_args.sourceService = ApiServiceRef(None,peerName=PEER_NAME,clusterName=SOURCE_CLUSTER_NAME,serviceName=SOURCE_HIVE_SERVICE)
 hive_args.hdfsArguments = hdfs_args
-hive_args.tableFilters = plan_tblist
+if !plan_tblist:
+	print("[ERROR]列表不能为空！！")
+	exit(1)
+hive_args.tableFilters = plan_tblist	  # 这个参数不能为None或者[]，为空的话会把整个hive进行同步，可能导致重大故障！！！！前面务必加上判断过滤空值情况！！！
 hive_args.force = True                    # 强制覆盖
 hive_args.runInvelidateMetadata = True    # 刷新impala元
 hive_args.replicateData = True            # 复制HDFS文件
