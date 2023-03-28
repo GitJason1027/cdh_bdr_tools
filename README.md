@@ -1,5 +1,5 @@
-# cm_api_programs
- cm_api使用示例
+# CDH商业版的BDR计划配置脚本
+ 使用Python的cm_api调用
 
 
 ## 脚本bdr_build_plan.py 
